@@ -9,7 +9,8 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  build-matrix:
+    name: build (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
@@ -36,6 +37,14 @@ jobs:
 
       - name: Run tests
         run: cargo test
+
+  build:
+    name: build
+    needs: [build-matrix]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm all matrix builds passed
+        run: exit 0
 
   audit:
     name: Audit dependencies
